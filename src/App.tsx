@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import useReactRouter from 'use-react-router';
 import { IRoute } from './routes/routes';
 import RoutesModule from './routes/route.module';
+import { ResolveNavigation, RejectNavitavion, LazyBoxResolve } from './navigation';
 
 const BaseLayout: FunctionComponent = ({ children }) => {
 	return (
@@ -108,7 +109,28 @@ const routes: Array<IRoute> = [
 	}
 ];
 
+const isAuth = () => {
+	console.log('isAuth');
+	return ResolveNavigation(() => true);
+};
+
+const isNotAuth = () => {
+	console.log('isNotAuth');
+	return RejectNavitavion();
+};
+
 const App: FunctionComponent = () => {
+	// const navigation = isAuth()
+	// 	.chain(() => isNotAuth())
+	// 	.chain(() => isAuth())
+	// 	.chain(() => isAuth())
+	// 	.chain(() => isAuth())
+	// 	.chain(() => isAuth());
+	//.fold(() => console.log('success'), () => console.log('error'));
+
+	const navigation = LazyBoxResolve(() => true).map((c: boolean) => false && c).map((c: boolean) => true && c);
+	//.fold((c: boolean) => console.log(c));
+
 	return (
 		<div className="App">
 			<RoutesModule routes={routes} />
