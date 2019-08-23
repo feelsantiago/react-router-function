@@ -55,6 +55,7 @@ const Home: FunctionComponent = () => {
 
 const About: FunctionComponent = () => <h1>About Component</h1>;
 const Register: FunctionComponent = () => <h1>Register Component</h1>;
+const Denied: FunctionComponent = () => <h1>Access Denied</h1>;
 
 const Login: FunctionComponent = () => {
 	const { history } = useReactRouter();
@@ -95,9 +96,13 @@ const routes: Array<IRoute> = [
 			},
 			{
 				path: 'about',
-				redirectTo: '/',
+				redirectTo: '/denied',
 				guards: [ hasRoleAdmin ],
 				component: About
+			},
+			{
+				path: 'denied',
+				component: Denied
 			}
 		]
 	},
