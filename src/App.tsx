@@ -79,6 +79,8 @@ const isLoggin = () => {
 	return localStorage.getItem('auth') ? true : false;
 };
 
+const hasRoleAdmin = () => false;
+
 const routes: Array<IRoute> = [
 	{
 		path: '/',
@@ -93,6 +95,8 @@ const routes: Array<IRoute> = [
 			},
 			{
 				path: 'about',
+				redirectTo: '/',
+				guards: [ hasRoleAdmin ],
 				component: About
 			}
 		]

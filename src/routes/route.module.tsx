@@ -23,7 +23,7 @@ function resolveSubRoutes (route: IRoute): Array<IRoute> {
 			component: withLayout(Layout, Component),
 			exact: route.exact,
 			guards: guards && route.guards ? guards.concat(route.guards) : guards,
-			redirectTo: redirectTo ? redirectTo : route.redirectTo
+			redirectTo: route.redirectTo ? route.redirectTo : redirectTo
 		};
 	});
 
