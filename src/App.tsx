@@ -1,26 +1,119 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { FunctionComponent } from 'react';
 import './App.css';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { Link } from 'react-router-dom';
+import useReactRouter from 'use-react-router';
+import { IRoute } from './routes/routes';
+import RoutesModule from './routes/route.module';
+
+const BaseLayout: FunctionComponent = ({ children }) => {
+	return (
+		<div id="base-layout">
+			<p>Base Layout</p>
+			<Link to="/">Home</Link> <Link to="/about">About</Link>
+			{children}
+		</div>
+	);
+};
+
+const LoginLayout: FunctionComponent = ({ children }) => {
+	return (
+		<div id="login-layout">
+			<p>Login Layout</p>
+			<Link to="/login">Login</Link> <Link to="/login/register">Register</Link>
+			{children}
+		</div>
+	);
+};
+
+const logoff = () => {
+	localStorage.clear();
+};
+
+const logon = () => {
+	localStorage.setItem('auth', 'true');
+};
+
+const Home: FunctionComponent = () => {
+	const { history } = useReactRouter();
+
+	return (
+		<div id="app-home">
+			<h1>Home Component</h1>
+			<button
+				onClick={(e) => {
+					e.preventDefault();
+					logoff();
+					history.push('/login');
+				}}
+			>
+				Deslogar
+			</button>
+		</div>
+	);
+};
+
+const About: FunctionComponent = () => <h1>About Component</h1>;
+const Register: FunctionComponent = () => <h1>Register Component</h1>;
+
+const Login: FunctionComponent = () => {
+	const { history } = useReactRouter();
+
+	return (
+		<div id="app-login">
+			<h1>Login Component</h1>
+			<button
+				onClick={(e) => {
+					e.preventDefault();
+					logon();
+					history.push('/');
+				}}
+			>
+				Logar
+			</button>
+		</div>
+	);
+};
+
+const routes: Array<IRoute> = [
+	{
+		path: '/',
+		component: BaseLayout,
+		routes: [
+			{
+				path: '/',
+				exact: true,
+				component: Home
+			},
+			{
+				path: 'about',
+				component: About
+			}
+		]
+	},
+	{
+		path: '/login',
+		component: LoginLayout,
+		routes: [
+			{
+				path: '/',
+				exact: true,
+				component: Login
+			},
+			{
+				path: 'register',
+				component: Register
+			}
+		]
+	}
+];
+
+const App: FunctionComponent = () => {
+	return (
+		<div className="App">
+			<RoutesModule routes={routes} />
+		</div>
+	);
+};
 
 export default App;
