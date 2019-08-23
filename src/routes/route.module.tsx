@@ -55,8 +55,11 @@ export const RoutesModule: FunctionComponent<RouteModuleProps> = ({ routes }) =>
 			<BrowserRouter>
 				<Switch>
 					{newRoutes.map((route, index) => {
-						const { path, exact, component: Component, redirectTo } = route;
+						const { path, exact, component: Component } = route;
+
 						const guards = route.guards ? route.guards : [ () => true ];
+						const redirectTo = route.redirectTo ? route.redirectTo : '/';
+
 						const guardResult = guards.reduce(
 							(acc, next) => acc.next((status) => status && next()),
 							ResolveGuards(() => true)
@@ -68,9 +71,9 @@ export const RoutesModule: FunctionComponent<RouteModuleProps> = ({ routes }) =>
 								exact={exact}
 								key={index}
 								render={() =>
-									resolveGuards(guardResult, redirectTo ? redirectTo : '/', Component).fold(
+									resolveGuards(guardResult, redirectTo, Component).fold(
 										(Component: any) => <Component />,
-										(ErrorPage: any) => <ErrorPage to={redirectTo} />
+										(ErrorPage: typeof Redirect) => <ErrorPage to={redirectTo} />
 									)}
 							/>
 						);
